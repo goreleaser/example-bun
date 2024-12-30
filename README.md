@@ -1,2 +1,3 @@
 # example-bun
-Example Bun project using GoReleaser
+
+This uses GoReleaser v2.5+ to build and release a Bun project with GoReleaser.
