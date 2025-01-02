@@ -8,6 +8,9 @@
 
 version: 2
 
+project_name: example
+
+# Actually builds the binaries.
 builds:
   - builder: bun
     targets:
@@ -17,6 +20,7 @@ builds:
       - darwin-arm64
       - windows-x64-modern
 
+# Creates archives for each target.
 archives:
   - format: tar.gz
     # this name template makes the OS and Arch compatible with the results of `uname`.
@@ -31,6 +35,7 @@ archives:
       - goos: windows
         format: zip
 
+# Changelog configuration (will be in the github release).
 changelog:
   sort: asc
   filters:
@@ -38,9 +43,69 @@ changelog:
       - "^docs:"
       - "^test:"
 
+# A footer to add to all releases.
 release:
   footer: >-
 
     ---
 
     Released by [GoReleaser](https://github.com/goreleaser/goreleaser).
+
+# Creates Linux packages.
+nfpms:
+  - file_name_template: "{{ .ConventionalFileName }}"
+    maintainer: Carlos Alexandro Becker <carlos@becker.software>
+    formats:
+      - deb
+      - apk
+      - rpm
+
+# Creates Darwin universal binaries.
+universal_binaries:
+  - replace: true
+
+# Enables source archives.
+source:
+  enabled: true
+
+# SBOMs for the archives.
+sboms:
+  - artifacts: archive
+
+# Create Docker images.
+# We create a manifest below, so here the images need the suffix with the
+# architecture.
+dockers:
+  - image_templates:
+      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-arm64"
+    dockerfile: Dockerfile
+    goarch: arm64
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/arm64"
+  - image_templates:
+      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-amd64"
+    dockerfile: Dockerfile
+    goarch: amd64
+    use: buildx
+    build_flag_templates:
+      - "--pull"
+      - "--label=org.opencontainers.image.created={{.Date}}"
+      - "--label=org.opencontainers.image.name={{.ProjectName}}"
+      - "--label=org.opencontainers.image.revision={{.FullCommit}}"
+      - "--label=org.opencontainers.image.version={{.Version}}"
+      - "--label=org.opencontainers.image.source={{.GitURL}}"
+      - "--platform=linux/amd64"
+
+# Here we join both images into a Docker manifest.
+docker_manifests:
+  - name_template: "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}"
+    image_templates:
+      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-arm64"
+      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-amd64"
