@@ -1,6 +1,6 @@
 # example-bun
 
-This uses GoReleaser v2.5+ to build and release a Bun project with GoReleaser.
+This uses GoReleaser v2.6+ to build and release a Bun project with GoReleaser.
 
 To install dependencies:
 
