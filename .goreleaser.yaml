@@ -77,7 +77,7 @@ sboms:
 # architecture.
 dockers:
   - image_templates:
-      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-arm64"
+      - "ghcr.io/goreleaser/example-bun:{{ .Tag }}-arm64"
     dockerfile: Dockerfile
     goarch: arm64
     use: buildx
@@ -90,7 +90,7 @@ dockers:
       - "--label=org.opencontainers.image.source={{.GitURL}}"
       - "--platform=linux/arm64"
   - image_templates:
-      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-amd64"
+      - "ghcr.io/goreleaser/example-bun:{{ .Tag }}-amd64"
     dockerfile: Dockerfile
     goarch: amd64
     use: buildx
@@ -105,7 +105,7 @@ dockers:
 
 # Here we join both images into a Docker manifest.
 docker_manifests:
-  - name_template: "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}"
+  - name_template: "ghcr.io/goreleaser/example-bun:{{ .Tag }}"
     image_templates:
-      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-arm64"
-      - "ghcr.io/vedantmgoyal9/example-bun:{{ .Tag }}-amd64"
+      - "ghcr.io/goreleaser/example-bun:{{ .Tag }}-arm64"
+      - "ghcr.io/goreleaser/example-bun:{{ .Tag }}-amd64"
