@@ -1,3 +1,3 @@
-FROM debian:12-slim
+FROM debian:13-slim
 COPY example /usr/bin/example
 ENTRYPOINT [ "/usr/bin/example" ]
